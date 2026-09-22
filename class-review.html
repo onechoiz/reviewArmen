@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Class Recap</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#202A33;
+    --ink-soft:#4B5560;
+    --paper:#EFF2ED;
+    --panel:#FFFFFF;
+    --line:#D9DCD3;
+    --accent:#C6862E;
+    --accent-ink:#7A5219;
+    --teal:#3E6E63;
+    --known:#5C8A66;
+    --known-bg:#E7EFE6;
+    --review:#B4573F;
+    --review-bg:#F6E7E2;
+    --radius:10px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Work Sans', sans-serif;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{
+    font-family:'Spectral', serif;
+    font-weight:600;
+    margin:0;
+    color:var(--ink);
+  }
+  .wrap{
+    max-width:840px;
+    margin:0 auto;
+    padding:0 20px 64px;
+  }
+  header.top{
+    padding:40px 20px 0;
+    max-width:840px;
+    margin:0 auto;
+  }
+  header.top h1{
+    font-size:2rem;
+    letter-spacing:-0.01em;
+  }
+  header.top p{
+    margin:10px 0 28px;
+    color:var(--ink-soft);
+    max-width:58ch;
+    font-size:0.98rem;
+  }
+  nav.tabs{
+    max-width:840px;
+    margin:0 auto;
+    display:flex;
+    gap:4px;
+    padding:0 20px;
+    overflow-x:auto;
+  }
+  nav.tabs button{
+    font-family:'Work Sans', sans-serif;
+    font-size:0.92rem;
+    font-weight:600;
+    color:var(--ink-soft);
+    background:#E3E6DD;
+    border:1px solid var(--line);
+    border-bottom:none;
+    padding:11px 18px 13px;
+    border-radius:9px 9px 0 0;
+    cursor:pointer;
+    transform:translateY(3px);
+    transition:transform .15s ease, background .15s ease, color .15s ease;
+    white-space:nowrap;
+  }
+  nav.tabs button:hover{ color:var(--ink); }
+  nav.tabs button.active{
+    background:var(--panel);
+    color:var(--ink);
+    transform:translateY(0);
+    border-color:var(--line);
+  }
+  main{
+    max-width:840px;
+    margin:0 auto;
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:0 10px 10px 10px;
+    padding:32px;
+  }
+  @media (max-width:600px){
+    main{ padding:22px 16px; border-radius:0 0 10px 10px;}
+    header.top{ padding:28px 16px 0; }
+    nav.tabs{ padding:0 16px; }
+  }
+  .panel{ display:none; }
+  .panel.active{ display:block; }
+
+  /* ---- chips ---- */
+  .chips{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-bottom:26px;
+  }
+  .chip{
+    font-family:'Work Sans', sans-serif;
+    font-size:0.85rem;
+    font-weight:500;
+    padding:6px 13px;
+    border-radius:999px;
+    border:1px solid var(--line);
+    background:var(--paper);
+    color:var(--ink-soft);
+    cursor:pointer;
+  }
+  .chip.active{
+    background:var(--teal);
+    border-color:var(--teal);
+    color:#fff;
+  }
+
+  /* ---- vocab ---- */
+  .vocab-group{ margin-bottom:34px; }
+  .vocab-group h2{
+    font-size:1.18rem;
+    padding-bottom:8px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:14px;
+  }
+  .term-row{
+    padding:12px 0;
+    border-bottom:1px dashed var(--line);
+  }
+  .term-row:last-child{ border-bottom:none; }
+  .term-main{
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+  .term{
+    font-family:'Spectral', serif;
+    font-weight:600;
+    font-size:1.04rem;
+  }
+  .ipa{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.82rem;
+    color:var(--accent-ink);
+    background:#F6ECDB;
+    padding:1px 7px;
+    border-radius:5px;
+  }
+  .def{ margin:4px 0 2px; color:var(--ink); }
+  .ex{ margin:0; color:var(--ink-soft); font-style:italic; }
+
+  /* ---- grammar ---- */
+  .g-card{
+    margin-bottom:30px;
+    padding-bottom:28px;
+    border-bottom:1px solid var(--line);
+  }
+  .g-card:last-child{ border:none; margin-bottom:0; padding-bottom:0; }
+  .g-card h2{ font-size:1.22rem; margin-bottom:10px; }
+  .g-card .rule{ margin:0 0 14px; }
+  .formula{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.86rem;
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-left:3px solid var(--teal);
+    padding:10px 14px;
+    border-radius:6px;
+    margin:0 0 14px;
+    overflow-x:auto;
+    white-space:nowrap;
+  }
+  .g-card ul{ margin:0; padding-left:20px; }
+  .g-card li{ margin-bottom:6px; }
+  .g-card .note{
+    margin-top:12px;
+    font-size:0.92rem;
+    color:var(--ink-soft);
+    border-left:3px solid var(--accent);
+    padding-left:12px;
+  }
+
+  /* ---- quiz ---- */
+  #quiz-body{ min-height:260px; }
+  .q-progress{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.82rem;
+    color:var(--ink-soft);
+    margin-bottom:14px;
+  }
+  .q-prompt{
+    font-family:'Spectral', serif;
+    font-size:1.18rem;
+    font-weight:600;
+    margin-bottom:18px;
+  }
+  .q-options{
+    display:flex;
+    flex-direction:column;
+    gap:9px;
+  }
+  .q-opt{
+    text-align:left;
+    padding:12px 15px;
+    border:1px solid var(--line);
+    border-radius:8px;
+    background:var(--panel);
+    font-family:'Work Sans', sans-serif;
+    font-size:0.96rem;
+    cursor:pointer;
+    color:var(--ink);
+  }
+  .q-opt:hover:not(:disabled){ border-color:var(--teal); }
+  .q-opt.correct{ background:var(--known-bg); border-color:var(--known); }
+  .q-opt.incorrect{ background:var(--review-bg); border-color:var(--review); }
+  .q-opt:disabled{ cursor:default; }
+  .q-next{
+    margin-top:20px;
+    background:var(--ink);
+    color:#fff;
+    border:none;
+    padding:11px 22px;
+    border-radius:8px;
+    font-family:'Work Sans', sans-serif;
+    font-weight:600;
+    font-size:0.94rem;
+    cursor:pointer;
+  }
+  .q-result{ text-align:left; }
+  .q-result .score{
+    font-family:'Spectral', serif;
+    font-size:2.1rem;
+    font-weight:700;
+    margin:6px 0 4px;
+  }
+  .q-result p{ color:var(--ink-soft); margin:0 0 18px; }
+
+  /* ---- flashcards ---- */
+  .fc-controls{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    align-items:center;
+    margin-bottom:22px;
+  }
+  .fc-controls select{
+    font-family:'Work Sans', sans-serif;
+    font-size:0.9rem;
+    padding:8px 10px;
+    border-radius:7px;
+    border:1px solid var(--line);
+    background:var(--panel);
+    color:var(--ink);
+  }
+  .fc-controls label{
+    font-size:0.88rem;
+    color:var(--ink-soft);
+    display:flex;
+    align-items:center;
+    gap:6px;
+  }
+  .fc-stats{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.82rem;
+    color:var(--ink-soft);
+    margin-bottom:16px;
+  }
+  .fc-card-wrap{
+    perspective:1400px;
+    margin:0 auto 22px;
+    max-width:520px;
+  }
+  .fc-card{
+    position:relative;
+    min-height:220px;
+    border-radius:14px;
+    cursor:pointer;
+    transform-style:preserve-3d;
+    transition:transform .45s cubic-bezier(.4,.2,.2,1);
+  }
+  .fc-card.flipped{ transform:rotateY(180deg); }
+  .fc-face{
+    position:absolute;
+    inset:0;
+    backface-visibility:hidden;
+    border-radius:14px;
+    border:1px solid var(--line);
+    padding:28px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+  }
+  .fc-front{
+    background:var(--panel);
+  }
+  .fc-front .term{ font-size:1.5rem; }
+  .fc-back{
+    background:#F5F3EA;
+    transform:rotateY(180deg);
+  }
+  .fc-back .def{ font-size:1.02rem; margin-bottom:10px; }
+  .fc-back .ex{ font-size:0.94rem; }
+  .fc-cat-tag{
+    position:absolute;
+    top:12px;
+    left:16px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.7rem;
+    color:var(--ink-soft);
+  }
+  .fc-hint{
+    position:absolute;
+    bottom:12px;
+    font-size:0.76rem;
+    color:var(--ink-soft);
+  }
+  .fc-nav{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+  .fc-btn{
+    font-family:'Work Sans', sans-serif;
+    font-weight:600;
+    font-size:0.9rem;
+    padding:10px 18px;
+    border-radius:8px;
+    border:1px solid var(--line);
+    background:var(--panel);
+    color:var(--ink);
+    cursor:pointer;
+  }
+  .fc-btn.primary{ background:var(--ink); color:#fff; border-color:var(--ink); }
+  .fc-btn.known{ background:var(--known-bg); border-color:var(--known); color:#2E4A34; }
+  .fc-btn.review{ background:var(--review-bg); border-color:var(--review); color:#7A2E1E; }
+
+  :focus-visible{ outline:2px solid var(--teal); outline-offset:2px; }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <h1>Class Recap</h1>
+  <p id="subtitle"></p>
+</header>
+
+<nav class="tabs" role="tablist">
+  <button class="tab active" data-tab="vocab">Vocabulary</button>
+  <button class="tab" data-tab="grammar">Grammar</button>
+  <button class="tab" data-tab="practice">Practice</button>
+  <button class="tab" data-tab="flashcards">Flashcards</button>
+</nav>
+
+<div class="wrap">
+<main>
+
+  <section id="vocab" class="panel active">
+    <div class="chips" id="vocab-chips"></div>
+    <div id="vocab-list"></div>
+  </section>
+
+  <section id="grammar" class="panel">
+    <div id="grammar-list"></div>
+  </section>
+
+  <section id="practice" class="panel">
+    <div id="quiz-body"></div>
+  </section>
+
+  <section id="flashcards" class="panel">
+    <div class="fc-controls">
+      <select id="fc-category"></select>
+      <label><input type="checkbox" id="fc-review-only"> Only cards I'm still learning</label>
+      <button class="fc-btn" id="fc-shuffle">Shuffle</button>
+      <button class="fc-btn" id="fc-reset">Reset progress</button>
+    </div>
+    <div class="fc-stats" id="fc-stats"></div>
+    <div class="fc-card-wrap">
+      <div class="fc-card" id="fc-card" tabindex="0">
+        <div class="fc-face fc-front">
+          <span class="fc-cat-tag" id="fc-cat-front"></span>
+          <div class="term" id="fc-term"></div>
+          <span class="ipa" id="fc-ipa" style="margin-top:10px;"></span>
+          <span class="fc-hint">tap to flip</span>
+        </div>
+        <div class="fc-face fc-back">
+          <span class="fc-cat-tag" id="fc-cat-back"></span>
+          <p class="def" id="fc-def"></p>
+          <p class="ex" id="fc-ex"></p>
+          <span class="fc-hint">tap to flip back</span>
+        </div>
+      </div>
+    </div>
+    <div class="fc-nav">
+      <button class="fc-btn" id="fc-prev">Prev</button>
+      <button class="fc-btn review" id="fc-learning">Still learning</button>
+      <button class="fc-btn known" id="fc-known">Got it</button>
+      <button class="fc-btn" id="fc-next">Next</button>
+    </div>
+  </section>
+
+</main>
+</div>
+
+<script>
+/* =========================================================
+   DATA
+   ========================================================= */
+const vocabData = [
+  { name: "Everyday Idioms & Small Talk", items: [
+    {t:"out of the blue", d:"happening suddenly and without any warning", e:"He called me out of the blue after years of silence."},
+    {t:"all of a sudden", d:"very quickly and unexpectedly", e:"All of a sudden, the lights went out."},
+    {t:"pull yourself together", d:"to calm down and regain control of your emotions", e:"Take a breath and pull yourself together before the meeting."},
+    {t:"I can't sit still", d:"used to say you're too restless or excited to stay in one place", e:"I can't sit still, I'm so nervous about the results."},
+    {t:"slipped my mind", d:"used when you forget something you meant to do or remember", e:"I meant to call you back, but it completely slipped my mind."},
+    {t:"a vague idea", d:"a general idea, without much detail or clarity", e:"I only have a vague idea of how the machine works."},
+    {t:"it's not a big deal", d:"used to say something isn't important or serious", e:"Don't worry about the mistake, it's not a big deal."},
+    {t:"I'm in", d:"used to agree to join or take part in something", e:"A weekend trip? I'm in!"},
+    {t:"let me put it this way", d:"used to introduce a simpler or clearer way of explaining something", e:"Let me put it this way: we're not going to make the deadline."},
+    {t:"there might be another word for that, but I'm not sure", d:"a hedge used when you can't recall the exact term you want", e:"There might be another word for that, but I'm not sure what it is."},
+    {t:"do not concern yourself with", d:"used to tell someone not to worry about or focus on something", e:"Do not concern yourself with the budget, I'll handle it."},
+    {t:"let's not get into that", d:"used to avoid discussing a topic further, often a sensitive one", e:"Let's not get into that right now, we have other things to sort out."},
+    {t:"come up with something", d:"to think of or invent an idea, plan, or solution", e:"Give me a minute, I'll come up with something."},
+    {t:"thanks a lot, I really appreciate it", d:"a warm, slightly more emphatic way of saying thank you", e:"Thanks a lot, I really appreciate it, you didn't have to do that."},
+    {t:"I would greatly appreciate it / I'd very much like it", d:"formal, polite ways of making a request", e:"I would greatly appreciate it if you could confirm by Friday."},
+    {t:"maybe there is a network issue", d:"a polite guess used to explain a bad connection during a call", e:"Sorry, can you hear me? Maybe there is a network issue."},
+    {t:"just a sec, please", d:"a casual way of asking someone to wait a moment", e:"Just a sec, please, I need to find the file."}
+  ]},
+  { name: "Emotions & Reactions", items: [
+    {t:"overwhelmed", d:"feeling like you have more to deal with than you can manage", e:"She felt overwhelmed by all the paperwork."},
+    {t:"I am at a loss for words", d:"temporarily unable to speak or think what to say, usually from shock, surprise, or strong emotion", e:"When they announced my promotion, I was at a loss for words."},
+    {t:"at a loss", d:"not knowing what to do or say", e:"He was at a loss when his flight got cancelled."},
+    {t:"I was in awe", d:"feeling great respect mixed with wonder, and sometimes a little fear", e:"Standing beneath the cathedral, I was in awe of its size."},
+    {t:"it doesn't sit right with me", d:"used when something feels wrong or unfair, even if you can't fully explain why", e:"His explanation doesn't sit right with me."},
+    {t:"wrap my head around it", d:"to fully understand something, usually something complex or surprising", e:"I still can't wrap my head around how expensive that was."},
+    {t:"nerve-wracking", d:"causing great anxiety or tension", e:"Public speaking is nerve-wracking for a lot of people."},
+    {t:"my brain is not braining", d:"an informal way of saying you can't think clearly right now", e:"Sorry, ignore that message, my brain is not braining today."},
+    {t:"I could not get my mind off it / switch my mind off", d:"unable to stop thinking about something", e:"Standing in the cathedral, I couldn't get my mind off things back home."},
+    {t:"fulfilment", d:"the feeling of being happy, pleased, and satisfied because you've achieved or received something meaningful", e:"Teaching gives her a real sense of fulfilment."},
+    {t:"nerves of steel", d:"the ability to stay calm under pressure or in frightening situations", e:"You need nerves of steel to work in that job."},
+    {t:"weary", ipa:"/ˈwɪəri/", d:"very tired, physically or mentally", e:"After the long shift, she felt weary."}
+  ]},
+  { name: "Health, Skin & Injuries", items: [
+    {t:"treat", d:"to give medical care to someone or something", e:"The doctor treated the wound immediately."},
+    {t:"swollen", d:"enlarged because of fluid or inflammation", e:"Her ankle was swollen after the fall."},
+    {t:"bloated", d:"swollen with gas or fluid, often used about the stomach", e:"I feel bloated after that meal."},
+    {t:"wound", d:"an injury in which the skin is cut or broken", e:"Clean the wound before covering it."},
+    {t:"dress (a wound)", d:"to clean and cover an injury", e:"The nurse dressed the wound carefully."},
+    {t:"cleanse", d:"to clean thoroughly, especially the skin or a wound", e:"Cleanse the area before applying the cream."},
+    {t:"swell", d:"to become larger than normal, usually because of injury or inflammation", e:"The bruise began to swell within minutes."},
+    {t:"sunblock / sunscreen", d:"a cream that protects the skin from the sun's UV rays", e:"Put on sunscreen before you go to the beach."},
+    {t:"sunburn", d:"red, sore skin caused by too much sun exposure", e:"He got a bad sunburn on his shoulders."},
+    {t:"UV index", d:"a scale that measures the strength of the sun's ultraviolet radiation", e:"The UV index is very high today, so wear sunscreen."},
+    {t:"borderline extreme", d:"close to being too much or too severe", e:"That workout routine is borderline extreme."},
+    {t:"exacerbated", d:"made a problem or condition worse", e:"The heat exacerbated her sunburn."}
+  ]},
+  { name: "Fear, Risk & Personality", items: [
+    {t:"adrenaline junkie", d:"someone who loves dangerous or exciting activities for the thrill", e:"He's a real adrenaline junkie, always chasing the next big jump."},
+    {t:"thrill-seeker", d:"a person who actively looks for exciting or dangerous experiences", e:"Thrill-seekers love extreme sports."},
+    {t:"to be afraid of", d:"to feel fear about something", e:"She's afraid of heights."},
+    {t:"down to earth", d:"practical, sensible, and not pretentious", e:"Despite her success, she's very down to earth."},
+    {t:"cunning", d:"clever at getting what you want, often in a sly or deceptive way", e:"The fox is known for being cunning."}
+  ]},
+  { name: "Everyday Actions & Objects", items: [
+    {t:"drawer / drawers", d:"a sliding storage container, for example in a desk or dresser", e:"He keeps his socks in the top drawer."},
+    {t:"flat tyre", d:"a tyre that has lost air and can't be used", e:"We had to stop because of a flat tyre."},
+    {t:"pump up / inflate the tyre", d:"to add air to a tyre", e:"Can you help me pump up the tyre before the trip?"},
+    {t:"deflate", d:"to let the air out of something", e:"The tyre slowly deflated overnight."},
+    {t:"braces", d:"a device used to support, straighten, or hold something in place, such as teeth or a structure", e:"She's had braces on her teeth for a year."},
+    {t:"carbonated drink", d:"a fizzy drink containing bubbles of carbon dioxide", e:"He prefers a carbonated drink over plain water."},
+    {t:"instant coffee", d:"coffee made quickly by dissolving powder or granules in hot water", e:"I only have instant coffee at home."},
+    {t:"sip", d:"to drink something slowly, in small amounts", e:"She sipped her tea slowly."},
+    {t:"whine", d:"to complain in an annoying, high-pitched way", e:"Stop whining and just fix it."},
+    {t:"chores", d:"small routine tasks, especially around the house", e:"I have to finish my chores before I go out."},
+    {t:"squint", d:"to look at something with partly closed eyes, often because of bright light or difficulty seeing", e:"He squinted at the small print."}
+  ]},
+  { name: "Pets & Veterinary", items: [
+    {t:"leash / lead", d:"a strap used to control an animal, especially a dog", e:"Always keep your dog on a leash in the park."},
+    {t:"flea and tick (treatment)", d:"preventive treatment against small parasites that live on animals", e:"The vet recommended monthly flea and tick treatment."},
+    {t:"IV fluids", d:"liquid given directly into a vein, usually to treat dehydration", e:"The dog was given IV fluids overnight."},
+    {t:"CBC (blood test)", d:"Complete Blood Count, a common blood test that checks overall health", e:"The vet ordered a CBC to check for infection."},
+    {t:"chemistry panel", d:"a blood test that checks organ function and metabolism", e:"The chemistry panel showed normal kidney function."},
+    {t:"rigor mortis", ipa:"/ˌrɪɡə ˈmɔːtɪs/", d:"the stiffening of muscles that occurs after death", e:"Rigor mortis usually begins a few hours after death."},
+    {t:"chew", d:"to bite and crush something repeatedly, often with the teeth", e:"Puppies love to chew on shoes."},
+    {t:"tame", d:"to train a wild or nervous animal to be calm and obedient", e:"It took months to tame the stray cat."},
+    {t:"teach them tricks", d:"to train an animal to perform specific actions", e:"We're teaching the dog tricks like 'sit' and 'stay'."},
+    {t:"spaying and neutering", d:"surgical procedures that prevent animals from reproducing", e:"Spaying and neutering helps control the pet population."},
+    {t:"purebred", ipa:"/ˈpjʊəbrɛd/", d:"an animal whose parents are both of the same breed", e:"She only breeds purebred Labradors."},
+    {t:"breed of dog", d:"a specific type or category of dog", e:"What breed of dog is that?"}
+  ]},
+  { name: "Work & Progress", items: [
+    {t:"workload", d:"the amount of work someone has to do", e:"Her workload has doubled this month."},
+    {t:"getting some traction", d:"starting to make progress or gain attention and support", e:"Our new campaign is finally getting some traction."},
+    {t:"gear up", d:"to prepare for something", e:"We're gearing up for the product launch."},
+    {t:"ship out", d:"to send goods or products to their destination", e:"The orders will ship out by Friday."},
+    {t:"see through (an order)", d:"to make sure something is completed fully, from start to finish", e:"I'll see this order through to delivery."},
+    {t:"Murphy's Law", d:"the idea that if something can go wrong, it will", e:"Of course it started raining right after I washed the car, Murphy's Law."},
+    {t:"swamped", d:"overwhelmed with a large amount of work", e:"I'm completely swamped this week."},
+    {t:"hectic", d:"extremely busy, full of activity", e:"It's been a hectic month at work."}
+  ]},
+  { name: "Travel & Life Milestones", items: [
+    {t:"itinerary", d:"a planned route or schedule for a journey", e:"Our itinerary includes three cities in five days."},
+    {t:"stopover", d:"a short stay in a place during a longer journey, usually longer than a layover", e:"We had a two-day stopover in Istanbul."},
+    {t:"layover", d:"a short break between flights, usually just a few hours", e:"There's a three-hour layover in Doha."},
+    {t:"getaway", ipa:"/ˈɡɛtəweɪ/", d:"a short trip taken to relax or escape the daily routine", e:"We're planning a weekend getaway to the mountains."},
+    {t:"walk along the shore / seashore", d:"the land along the edge of the sea", e:"We walked along the shore at sunset."},
+    {t:"turn 50 years old", d:"to reach the age of 50", e:"She's turning 50 years old this year."},
+    {t:"be meant for each other", d:"to be a perfect match, especially romantically", e:"Everyone says they're meant for each other."}
+  ]},
+  { name: "Precise & Diplomatic Language", items: [
+    {t:"to get your message across", d:"to succeed in making people understand what you mean", e:"He struggled to get his message across in the interview."},
+    {t:"come across", d:"to give a particular impression", e:"She comes across as very confident."},
+    {t:"to come across as rude", d:"to give the impression of being rude, even if unintentionally", e:"Be careful, that email might come across as rude."},
+    {t:"persuade", d:"to convince someone to do or believe something", e:"It took a while to persuade her to join the team."},
+    {t:"convince", d:"to make someone believe or agree to something", e:"He convinced me to try the new restaurant."},
+    {t:"apprehensive", d:"anxious or worried about something that might happen", e:"She felt apprehensive about the exam results."},
+    {t:"inquire", ipa:"/ɪnˈkwʌɪə/", d:"to ask for information", e:"I'd like to inquire about the opening hours."},
+    {t:"incentive", ipa:"/ɪnˈsɛntɪv/", d:"something that encourages a person to do something", e:"A bonus is a great incentive to work harder."},
+    {t:"offensive", d:"causing someone to feel hurt, upset, or insulted", e:"That comment was offensive to many people."},
+    {t:"racial slur", d:"a deliberately offensive word aimed at a person's race or ethnicity", e:"Using a racial slur is never acceptable, even as a joke."},
+    {t:"add insult to injury", d:"to make a bad situation even worse", e:"Losing the match was bad enough, but the referee's comment added insult to injury."},
+    {t:"derogatory", d:"showing a critical or disrespectful attitude", e:"He made a derogatory remark about her work."},
+    {t:"withdraw a formal complaint", d:"to officially cancel a complaint that was made", e:"After the apology, she decided to withdraw the formal complaint."},
+    {t:"digest", d:"to fully absorb, understand, and accept information so it becomes part of your long-term understanding", e:"It took me a while to digest the news."},
+    {t:"process", d:"to work through the practical facts of a situation, or manage an immediate emotional reaction", e:"I just need some time to process what happened."}
+  ]},
+  { name: "Describing Scale, Frequency & Change", items: [
+    {t:"to some extent", d:"partly, but not completely", e:"I agree with you, to some extent."},
+    {t:"in the long run", d:"over a long period of time, eventually", e:"It's more expensive now, but cheaper in the long run."},
+    {t:"overseas", d:"in or to a foreign country, across the sea", e:"She studied overseas for two years."},
+    {t:"trivial", d:"of little importance or value", e:"Don't worry about it, it's a trivial matter."},
+    {t:"build up", d:"to increase gradually", e:"Tension began to build up before the match."},
+    {t:"preposterous", d:"completely unreasonable, ridiculous, or contrary to common sense", e:"The idea that we could finish in one day was preposterous."},
+    {t:"commonplace", d:"happening often, not unusual", e:"Working remotely has become commonplace."},
+    {t:"prevalent", d:"widespread, common in a particular area or at a particular time", e:"This condition is more prevalent in colder climates."},
+    {t:"phenomenon", d:"a fact or situation that is observed to exist, especially one that's unusual or interesting", e:"Climate change is a global phenomenon."},
+    {t:"mundane", d:"ordinary, not exciting or interesting", e:"He was tired of his mundane daily routine."},
+    {t:"not a huge fan of", d:"used to say you don't particularly like something", e:"I'm not a huge fan of spicy food."},
+    {t:"not drawn to", d:"not naturally interested in or attracted to something", e:"I was not drawn to talk to them at the party."},
+    {t:"the vast majority", d:"almost all of a group", e:"The vast majority of students passed the exam."},
+    {t:"more often than not", d:"usually, most of the time", e:"More often than not, he's right about these things."},
+    {t:"stabilise", d:"to make something steady and no longer likely to change suddenly", e:"The doctors managed to stabilise the patient."},
+    {t:"regulate", d:"to control or adjust something so it works properly", e:"Deep breathing can help regulate your emotions."},
+    {t:"emotional regulation", d:"the ability to manage and respond to emotional experiences in a controlled way", e:"Emotional regulation is a key skill for reducing stress."},
+    {t:"owe", ipa:"/əʊ/", d:"to have a duty to pay or give something back to someone", e:"I owe him twenty dollars."},
+    {t:"seldom", ipa:"/ˈsɛldəm/", d:"not often, rarely", e:"He seldom complains about anything."},
+    {t:"obsolete", ipa:"/ˈɒbsəliːt/", d:"no longer used because something newer has replaced it", e:"That technology is obsolete now."}
+  ]},
+  { name: "Language & Grammar Terms", items: [
+    {t:"literal translation", d:"a translation that follows the exact words of the original, rather than the natural meaning", e:"That's just a literal translation, it doesn't sound natural in English."},
+    {t:"embedded questions", d:"a question placed inside a larger sentence, using normal word order instead of question word order", e:"'Could you tell me where the station is?' contains an embedded question."},
+    {t:"clauses", d:"a group of words containing a subject and a verb, used as a building block of a sentence", e:"A sentence can be made of one main clause and one or more subordinate clauses."},
+    {t:"noun phrase", d:"a group of words built around a noun, functioning as a noun in a sentence", e:"In 'the tall man', 'the tall man' is a noun phrase."},
+    {t:"tongue twister", d:"a phrase that's hard to say quickly and correctly because of similar sounds", e:"'She sells seashells' is a classic tongue twister."},
+    {t:"both", ipa:"/bəʊθ/", d:"the two together, not just one", e:"Both of them arrived on time."}
+  ]}
+];
+
+const grammarData = [
+  {
+    title: "Past Perfect: an earlier past action",
+    rule: "Use had + past participle for an action that finished before another action or moment in the past. It often pairs with a past simple action, or a time phrase like 'by the time'.",
+    examples: [
+      "By the time we came back, the festival had already finished.",
+      "We planned to go back when the festival had finished."
+    ],
+    note: "The past perfect answers the question 'which happened first?' when two things are being compared in the past."
+  },
+  {
+    title: "Present Perfect Continuous: unfinished time",
+    rule: "Use have/has been + verb-ing for something that started in the past and is still going on now, or has just stopped but is relevant to now. It's often paired with 'for' (a length of time) or 'since' (a starting point), and can sit inside a relative clause with 'where'.",
+    examples: [
+      "I have been enjoying my job for a few years.",
+      "I study at the university, where I have been taking evening classes."
+    ]
+  },
+  {
+    title: "Embedded (indirect) questions",
+    rule: "When a question is placed inside a bigger sentence, or made more polite, it loses the question word order. No auxiliary inversion, and 'do/does/did' disappears.",
+    formula: "Where is the station?  →  Could you tell me where the station is?",
+    examples: [
+      "What time does it start?  →  I wonder what time it starts.",
+      "Why did she leave?  →  I'm not sure why she left."
+    ],
+    note: "An embedded question is a type of clause: a group of words with its own subject and verb that works inside a larger sentence."
+  },
+  {
+    title: "Reduced relative clauses ending in a preposition",
+    rule: "In natural spoken English, the relative pronoun (that/which) is often dropped, leaving the preposition stranded at the end of the clause.",
+    formula: "The [Noun] + I + [Past Verb] + [Details] + [Preposition]",
+    examples: [
+      "The job I sent my CV for called me back.",
+      "The project I stayed up late for got approved.",
+      "The promotion I worked so hard for went to Vahan.",
+      "The flight I woke up early for was delayed.",
+      "The meal I waited an hour for was cold."
+    ]
+  },
+  {
+    title: "Perception verb + object + base verb",
+    rule: "After verbs like hear, see, watch, and feel, use object + the base form of the verb, with no 'to', to describe an action you witnessed or heard.",
+    examples: [
+      "I often hear her say that.",
+      "I heard him say the same thing.",
+      "I heard them say it too."
+    ]
+  },
+  {
+    title: "Demonstratives: this, these, that, those",
+    rule: "'This' is singular and near you. 'These' is plural and near you. 'That' is singular and further away. 'Those' is plural and further away.",
+    examples: [
+      "This is my desk.",
+      "Those people over there are my colleagues."
+    ]
+  },
+  {
+    title: "Agreement: 'so' and 'either'",
+    rule: "To agree with a positive statement, use So + auxiliary + subject. To agree with a negative statement, repeat the negative and add 'either' at the end, or use Neither + auxiliary + subject.",
+    examples: [
+      "'I love this song.' 'So do I.'",
+      "'He doesn't like coffee.' 'Neither does she.'",
+      "'I can't go.' 'I can't either.'"
+    ]
+  }
+];
+
+const quizData = [
+  { q:"What does 'out of the blue' mean?", opts:["After a long wait","Suddenly, without warning","In a bad mood","During bad weather"], correct:1 },
+  { q:"Which sentence uses the past perfect correctly?", opts:["By the time we came back, the festival finishes.","By the time we came back, the festival had already finished.","By the time we came back, the festival has finished.","By the time we come back, the festival had finished."], correct:1 },
+  { q:"\"I'm completely ___ this week, there's too much work.\"", opts:["trivial","swamped","obsolete","prevalent"], correct:1 },
+  { q:"Which sentence uses an embedded question correctly?", opts:["Could you tell me where is the station?","Could you tell me where the station is?","Could you tell me where the station?","Could you tell me is where the station?"], correct:1 },
+  { q:"'Beyond my comprehension' means...", opts:["Very easy to understand","Completely impossible to understand","Slightly confusing","Well known"], correct:1 },
+  { q:"'So do I' is used to...", opts:["Disagree with a negative statement","Agree with a positive statement","Ask a question","Agree with a negative statement"], correct:1 },
+  { q:"What's a 'stopover'?", opts:["A place you live permanently","A short stay during a longer journey","A type of flight delay","A missed connection"], correct:1 },
+  { q:"\"The flight I woke up early for was delayed.\" Which word is missing before 'for'?", opts:["which / that","when","where","who"], correct:0 },
+  { q:"Choose the best synonym for 'preposterous'.", opts:["reasonable","ridiculous","common","trivial"], correct:1 },
+  { q:"A dog's flea and tick treatment is given to...", opts:["treat a broken bone","prevent small parasites","calm an anxious dog","train a puppy"], correct:1 },
+  { q:"\"I heard him ___ it.\" Complete with the correct verb form.", opts:["to say","saying","say","said"], correct:2 },
+  { q:"How do 'digest' and 'process' differ?", opts:["They mean exactly the same thing","Digest is about facts, process is about full understanding","Digest is fully absorbing information long-term, process is working through the practical or emotional facts","Process is more formal than digest"], correct:2 },
+  { q:"'Nerves of steel' describes someone who...", opts:["Gets nervous easily","Stays calm under pressure","Works with metal","Has a medical condition"], correct:1 },
+  { q:"Which sentence agrees correctly with a negative statement?", opts:["'I don't like it.' 'So don't I.'","'I don't like it.' 'I don't either.'","'I don't like it.' 'So do I.'","'I don't like it.' 'Neither do I do.'"], correct:1 },
+  { q:"'Add insult to injury' means to...", opts:["apologise sincerely","make a bad situation even worse","physically hurt someone","compliment someone unexpectedly"], correct:1 },
+  { q:"A 'purebred' dog is one whose parents are...", opts:["unknown","of different breeds","the same breed","rescued from a shelter"], correct:2 },
+  { q:"\"This is my desk, but ___ over there are my colleagues' desks.\"", opts:["this","that","these","it"], correct:2 },
+  { q:"'Withdraw a formal complaint' means to...", opts:["make a complaint stronger","officially cancel a complaint","ignore a complaint","write a new complaint"], correct:1 }
+];
+
+/* =========================================================
+   TABS
+   ========================================================= */
+document.querySelectorAll('nav.tabs button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+  });
+});
+
+/* =========================================================
+   VOCAB
+   ========================================================= */
+const totalTerms = vocabData.reduce((n,c)=>n+c.items.length,0);
+document.getElementById('subtitle').textContent =
+  `${totalTerms} words and phrases from your recent classes, ${grammarData.length} grammar points, and a ${quizData.length}-question quiz to check what stuck.`;
+
+function renderVocab(filter){
+  const list = document.getElementById('vocab-list');
+  list.innerHTML = '';
+  vocabData.forEach(cat=>{
+    if(filter!=='All' && filter!==cat.name) return;
+    const group = document.createElement('div');
+    group.className = 'vocab-group';
+    const h = document.createElement('h2');
+    h.textContent = cat.name;
+    group.appendChild(h);
+    cat.items.forEach(item=>{
+      const row = document.createElement('div');
+      row.className = 'term-row';
+      row.innerHTML = `
+        <div class="term-main">
+          <span class="term">${item.t}</span>
+          ${item.ipa ? `<span class="ipa">${item.ipa}</span>` : ''}
+        </div>
+        <p class="def">${item.d}</p>
+        <p class="ex">${item.e}</p>`;
+      group.appendChild(row);
+    });
+    list.appendChild(group);
+  });
+}
+const chipsEl = document.getElementById('vocab-chips');
+['All', ...vocabData.map(c=>c.name)].forEach(name=>{
+  const chip = document.createElement('button');
+  chip.className = 'chip' + (name==='All' ? ' active' : '');
+  chip.textContent = name;
+  chip.addEventListener('click', ()=>{
+    document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+    chip.classList.add('active');
+    renderVocab(name);
+  });
+  chipsEl.appendChild(chip);
+});
+renderVocab('All');
+
+/* =========================================================
+   GRAMMAR
+   ========================================================= */
+const gList = document.getElementById('grammar-list');
+grammarData.forEach(g=>{
+  const card = document.createElement('div');
+  card.className = 'g-card';
+  card.innerHTML = `
+    <h2>${g.title}</h2>
+    <p class="rule">${g.rule}</p>
+    ${g.formula ? `<div class="formula">${g.formula}</div>` : ''}
+    <ul>${g.examples.map(ex=>`<li>${ex}</li>`).join('')}</ul>
+    ${g.note ? `<p class="note">${g.note}</p>` : ''}`;
+  gList.appendChild(card);
+});
+
+/* =========================================================
+   QUIZ
+   ========================================================= */
+let quizOrder = [];
+let quizIndex = 0;
+let quizScore = 0;
+
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+function startQuiz(){
+  quizOrder = shuffle(quizData.map((q,i)=>i));
+  quizIndex = 0;
+  quizScore = 0;
+  renderQuestion();
+}
+
+function renderQuestion(){
+  const body = document.getElementById('quiz-body');
+  const qi = quizOrder[quizIndex];
+  const q = quizData[qi];
+  const optOrder = shuffle(q.opts.map((o,i)=>i));
+
+  body.innerHTML = `
+    <div class="q-progress">Question ${quizIndex+1} of ${quizData.length}</div>
+    <div class="q-prompt">${q.q}</div>
+    <div class="q-options" id="q-options"></div>`;
+
+  const optsEl = document.getElementById('q-options');
+  optOrder.forEach(optIdx=>{
+    const b = document.createElement('button');
+    b.className = 'q-opt';
+    b.textContent = q.opts[optIdx];
+    b.addEventListener('click', ()=>answerQuestion(optIdx, q.correct));
+    optsEl.appendChild(b);
+  });
+}
+
+function answerQuestion(chosenIdx, correctIdx){
+  const buttons = document.querySelectorAll('#q-options .q-opt');
+  buttons.forEach(b=>{
+    b.disabled = true;
+    if(b.textContent === quizData[quizOrder[quizIndex]].opts[correctIdx]){
+      b.classList.add('correct');
+    } else if(b.textContent === quizData[quizOrder[quizIndex]].opts[chosenIdx] && chosenIdx!==correctIdx){
+      b.classList.add('incorrect');
+    }
+  });
+  if(chosenIdx===correctIdx) quizScore++;
+
+  const body = document.getElementById('quiz-body');
+  const next = document.createElement('button');
+  next.className = 'q-next';
+  next.textContent = quizIndex < quizData.length-1 ? 'Next question' : 'See results';
+  next.addEventListener('click', ()=>{
+    quizIndex++;
+    if(quizIndex < quizData.length){ renderQuestion(); }
+    else{ renderResults(); }
+  });
+  body.appendChild(next);
+}
+
+function renderResults(){
+  const body = document.getElementById('quiz-body');
+  body.innerHTML = `
+    <div class="q-result">
+      <p style="margin-bottom:0;">Your score</p>
+      <div class="score">${quizScore} / ${quizData.length}</div>
+      <p>${quizScore===quizData.length ? 'Everything landed.' : 'Worth a second look on the ones you missed.'}</p>
+      <button class="q-next" id="q-restart">Try again</button>
+    </div>`;
+  document.getElementById('q-restart').addEventListener('click', startQuiz);
+}
+startQuiz();
+
+/* =========================================================
+   FLASHCARDS
+   ========================================================= */
+const flatCards = [];
+vocabData.forEach(cat=>{
+  cat.items.forEach(item=>{
+    flatCards.push({ term:item.t, ipa:item.ipa||'', def:item.d, ex:item.e, cat:cat.name });
+  });
+});
+
+const KNOWN_KEY = 'classRecapKnownTerms';
+function getKnown(){
+  try{ return new Set(JSON.parse(localStorage.getItem(KNOWN_KEY)) || []); }
+  catch(e){ return new Set(); }
+}
+function saveKnown(set){
+  try{ localStorage.setItem(KNOWN_KEY, JSON.stringify([...set])); }
+  catch(e){}
+}
+let known = getKnown();
+
+let fcDeck = flatCards.slice();
+let fcIndex = 0;
+let fcFlipped = false;
+
+const catSelect = document.getElementById('fc-category');
+['All categories', ...vocabData.map(c=>c.name)].forEach(name=>{
+  const opt = document.createElement('option');
+  opt.value = name;
+  opt.textContent = name;
+  catSelect.appendChild(opt);
+});
+
+function buildDeck(){
+  const cat = catSelect.value;
+  const reviewOnly = document.getElementById('fc-review-only').checked;
+  fcDeck = flatCards.filter(c=>{
+    const catMatch = (cat==='All categories' || cat===c.cat);
+    const reviewMatch = !reviewOnly || !known.has(c.term);
+    return catMatch && reviewMatch;
+  });
+  fcIndex = 0;
+  fcFlipped = false;
+  renderCard();
+}
+
+function renderCard(){
+  const wrapCard = document.getElementById('fc-card');
+  wrapCard.classList.remove('flipped');
+  fcFlipped = false;
+
+  if(fcDeck.length===0){
+    document.getElementById('fc-term').textContent = 'Nothing here';
+    document.getElementById('fc-ipa').textContent = '';
+    document.getElementById('fc-def').textContent = 'Try a different filter, everything in this set is already marked as known.';
+    document.getElementById('fc-ex').textContent = '';
+    document.getElementById('fc-cat-front').textContent = '';
+    document.getElementById('fc-cat-back').textContent = '';
+    document.getElementById('fc-stats').textContent = `0 of 0`;
+    return;
+  }
+
+  const c = fcDeck[fcIndex];
+  document.getElementById('fc-term').textContent = c.term;
+  document.getElementById('fc-ipa').textContent = c.ipa;
+  document.getElementById('fc-def').textContent = c.def;
+  document.getElementById('fc-ex').textContent = c.ex;
+  document.getElementById('fc-cat-front').textContent = c.cat;
+  document.getElementById('fc-cat-back').textContent = c.cat;
+
+  const knownCount = flatCards.filter(x=>known.has(x.term)).length;
+  document.getElementById('fc-stats').textContent =
+    `Card ${fcIndex+1} of ${fcDeck.length}   |   ${knownCount} of ${flatCards.length} marked as known`;
+}
+
+document.getElementById('fc-card').addEventListener('click', ()=>{
+  if(fcDeck.length===0) return;
+  fcFlipped = !fcFlipped;
+  document.getElementById('fc-card').classList.toggle('flipped', fcFlipped);
+});
+document.getElementById('fc-card').addEventListener('keydown', (e)=>{
+  if(e.key==='Enter' || e.key===' '){
+    e.preventDefault();
+    document.getElementById('fc-card').click();
+  }
+});
+
+document.getElementById('fc-prev').addEventListener('click', ()=>{
+  if(fcDeck.length===0) return;
+  fcIndex = (fcIndex - 1 + fcDeck.length) % fcDeck.length;
+  renderCard();
+});
+document.getElementById('fc-next').addEventListener('click', ()=>{
+  if(fcDeck.length===0) return;
+  fcIndex = (fcIndex + 1) % fcDeck.length;
+  renderCard();
+});
+document.getElementById('fc-known').addEventListener('click', ()=>{
+  if(fcDeck.length===0) return;
+  known.add(fcDeck[fcIndex].term);
+  saveKnown(known);
+  const reviewOnly = document.getElementById('fc-review-only').checked;
+  if(reviewOnly){ buildDeck(); } else {
+    fcIndex = (fcIndex + 1) % fcDeck.length;
+    renderCard();
+  }
+});
+document.getElementById('fc-learning').addEventListener('click', ()=>{
+  if(fcDeck.length===0) return;
+  known.delete(fcDeck[fcIndex].term);
+  saveKnown(known);
+  fcIndex = (fcIndex + 1) % fcDeck.length;
+  renderCard();
+});
+document.getElementById('fc-shuffle').addEventListener('click', ()=>{
+  fcDeck = shuffle(fcDeck);
+  fcIndex = 0;
+  renderCard();
+});
+document.getElementById('fc-reset').addEventListener('click', ()=>{
+  known = new Set();
+  saveKnown(known);
+  buildDeck();
+});
+catSelect.addEventListener('change', buildDeck);
+document.getElementById('fc-review-only').addEventListener('change', buildDeck);
+
+buildDeck();
+</script>
+</body>
+</html>
